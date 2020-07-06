@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState, useCallback } from 'react';
+import {
+  AppBar, Toolbar, Typography, Button, Fab, Container
+} from '@material-ui/core'
+import { Link, Route, Redirect, useLocation, Router, useRouter } from 'wouter'
+import { fetchData } from './firebase.configuration'
+import Products from './components/Products'
+import ProductForm from './components/ProductForm';
 
-function App() {
+
+const App = () => {
+
+  const [products, setProducts] = useState([])
+  const router = useRouter()
+
+  useEffect(() => {
+    fetchData('/products').then(p => {
+      setProducts(p)
+    })
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <AppBar>
+        <Toolbar>
+          <Typography variant="h5">Dashboard</Typography>
+        </Toolbar>
+      </AppBar>
+      <Container className="content">
+        <Router>
+          <Route path="/">
+            <Redirect to="/products" />
+          </Route>
+          <Route path="/products">
+            <Products products={products} />
+          </Route>
+          <Route path="/products/create">
+            <ProductForm />
+          </Route>
+        </Router>
+      </Container>
+    </>
+  )
 }
 
 export default App;
