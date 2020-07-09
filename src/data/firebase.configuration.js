@@ -14,12 +14,29 @@ const cfg = {
 
 firebase.initializeApp(cfg)
 
+/**
+ * Fetch data from Firebase
+ * @param {string} collection - Path in firebase firestore 
+ * @returns {object} - Data
+ */
 export const fetchData = async (collection) => {
     const snapshot = await firebase.firestore().collection(collection).get();
     return snapshot.docs.map(doc => ({
         id : doc.id,
         ...doc.data()
     }))
+}
+
+export const saveData = async (collection, data) => {
+    const repo =  firebase.firestore().collection(collection);
+    const dto  = {...data}
+    
+    if(data.id) {
+        delete dto['id'];
+        await repo.doc(data.id).update(dto);
+    }else {
+        await repo.add(dto)
+    }
 }
 
 

@@ -1,40 +1,47 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  AppBar, Toolbar, Typography, Button, Fab, Container
+  AppBar, Toolbar, Typography, Button, Fab, Container, IconButton
 } from '@material-ui/core'
-import { Link, Route, Redirect, useLocation, Router, useRouter } from 'wouter'
-import { fetchData } from './firebase.configuration'
+
+import { Route, useLocation, Router, Redirect } from 'wouter'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { actions as productsAction } from './data/products/index'
 import Products from './components/Products'
 import ProductForm from './components/ProductForm';
 
 
 const App = () => {
-
-  const [products, setProducts] = useState([])
-  const router = useRouter()
+  const [location, navigate] = useLocation()
+  const dispatch = useDispatch()
+  const products = useSelector(state => state.products)
 
   useEffect(() => {
-    fetchData('/products').then(p => {
-      setProducts(p)
-    })
+    dispatch(productsAction.loadProduct())
   }, [])
 
   return (
     <>
       <AppBar>
-        <Toolbar>
-          <Typography variant="h5">Dashboard</Typography>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h5" >Dashboard</Typography>
+
+          <nav>
+            <Button variant="contained" color="primary" disableElevation
+              onClick={e => navigate('/products/form')}
+            >New</Button>
+          </nav>
         </Toolbar>
       </AppBar>
       <Container className="content">
-        <Router>
+        <Route path="/">
+          <Redirect to="/products" />
+        </Route>
+        <Router base="/products">
           <Route path="/">
-            <Redirect to="/products" />
-          </Route>
-          <Route path="/products">
             <Products products={products} />
           </Route>
-          <Route path="/products/create">
+          <Route path="/form">
             <ProductForm />
           </Route>
         </Router>
@@ -44,3 +51,5 @@ const App = () => {
 }
 
 export default App;
+
+
