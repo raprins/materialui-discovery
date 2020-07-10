@@ -1,35 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import {
-  AppBar, Toolbar, Typography, Button, Fab, Container, IconButton
+  AppBar, Toolbar, Typography, Button, Fab, Container, Input
 } from '@material-ui/core'
 
 import { Route, useLocation, Router, Redirect } from 'wouter'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { actions as productsAction } from './data/products/index'
-import Products from './components/Products'
-import ProductForm from './components/ProductForm';
-
+import Products from './components/products/Products'
+import ProductForm from './components/products/ProductForm';
 
 const App = () => {
-  const [location, navigate] = useLocation()
-  const dispatch = useDispatch()
-  const products = useSelector(state => state.products)
-
-  useEffect(() => {
-    dispatch(productsAction.loadProduct())
-  }, [])
 
   return (
     <>
       <AppBar>
-        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Toolbar className="main-toolbar">
           <Typography variant="h5" >Dashboard</Typography>
-
           <nav>
-            <Button variant="contained" color="primary" disableElevation
-              onClick={e => navigate('/products/form')}
-            >New</Button>
+            <Button variant="contained" color="primary" disableElevation>New</Button>
           </nav>
         </Toolbar>
       </AppBar>
@@ -39,9 +27,9 @@ const App = () => {
         </Route>
         <Router base="/products">
           <Route path="/">
-            <Products products={products} />
+            <Products />
           </Route>
-          <Route path="/form">
+          <Route path="/:id">
             <ProductForm />
           </Route>
         </Router>

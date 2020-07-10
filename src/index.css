@@ -6,6 +6,10 @@
   animation: fadeIn .5s ease-in-out forwards;
 }
 
+form {
+  width : 100%
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -27,6 +27,15 @@ export const fetchData = async (collection) => {
     }))
 }
 
+export const getDataById = async (collection, id) => {
+    const doc = firebase.firestore().collection(collection).doc(id)
+    const snapshot = await doc.get()
+    return {
+        id,
+        ...snapshot.data()
+    }
+}
+
 export const saveData = async (collection, data) => {
     const repo =  firebase.firestore().collection(collection);
     const dto  = {...data}

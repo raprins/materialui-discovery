@@ -6,7 +6,7 @@ import { saveData } from '../../data/firebase.configuration'
 const Form = ({ elements = {}, onSubmit }) => {
 
     const [formElements, setFormElements] = useState([])
-
+    console.log('elements', elements)
     useEffect(() => {
         const e = Object.keys(elements).map(name => {
             return {
